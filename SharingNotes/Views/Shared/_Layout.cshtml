@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SharingNotes</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SharingNotes.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="page-wrapper">
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" >
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" asp-controller="Home" asp-action="Index">Sharing Notes</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                    <!-- LEFT SIDE : Home -->
+                    <ul class="navbar-nav mb-2 mb-lg-0 me-8" style="margin-left:30px">
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" aria-current="page" href="#">Home</a>
+                        </li>
+                    </ul>
+
+                    <!-- CENTER : Search -->
+                    <form class="d-flex mx-auto" role="search" style="width: 40%;">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn btn-outline-success text-white" type="submit">Search</button>
+                    </form>
+
+                    <!-- RIGHT SIDE : User -->
+                    <ul class="navbar-nav mb-2 mb-lg-0 ms-auto text-white">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                USERNAME
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item text-white" href="#">Manage Profile</a></li>
+                                <li><a class="dropdown-item text-white" href="#">Manage Post</a></li>
+                                <li><a class="dropdown-item text-white" href="#">Analytics</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-white" href="#">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+        </nav>
+    </header>
+        <div class="container content-area">
+            <main role="main" class="pb-3 scrollable-cards">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-dark">
+        <div class="container text-white">
+            &copy; 2025 - SharingNotes  <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+        </div>
+    </footer>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
