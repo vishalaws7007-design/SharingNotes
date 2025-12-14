@@ -5,16 +5,18 @@
 <div class="d-flex flex-wrap mt-5 gap-4 justify-content-start ">
     <div class="card" style="width: 18rem;">
         <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
+            <h5 class="card-title">HTML</h5>
             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a  asp-controller="Home" asp-action="ReadMore" class="btn btn-primary">Read More</a>
+            <input type="hidden"  value="1"/>
+            <a asp-controller="Home" asp-action="ReadMore" asp-route-id="1"  class="btn btn-primary">Read More</a>
         </div>
     </div>
     <div class="card" style="width: 18rem;">
         <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
+            <h5 class="card-title">CSS</h5>
             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <input type="hidden" value="2" />
+            <a asp-controller="Home" asp-action="ReadMore" asp-route-id="2" class="btn btn-primary">Go somewhere</a>
         </div>
     </div>
      <div class="card" style="width: 18rem;">

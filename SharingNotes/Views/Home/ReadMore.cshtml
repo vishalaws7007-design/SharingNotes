@@ -1,10 +1,21 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
 
-    <div>
-    <h1> Read more Page
-    </h1>
-    </div>
+@{
+    ViewData["Title"] = ViewBag.Title;
 }
+
+<div class="container mt-5" style="max-width: 800px;">
+    <h1 class="mb-4">@ViewBag.Title</h1>
+
+    <p style="font-size: 18px; line-height: 1.8;">
+        @ViewBag.Description
+    </p>
+
+    <hr />
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">
+        ← Back to All Topics
+    </a>
+</div>

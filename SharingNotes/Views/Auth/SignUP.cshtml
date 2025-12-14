@@ -1,0 +1,94 @@
+﻿@model SharingNotes.Models.SignupViewModel
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<div class="content-area">
+    <div class="scrollable-cards">
+        <div style="display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 20px;">
+            <div class="signup-container">
+                <div class="logo-section">
+                    <h1>SharingNotes - SignUP</h1>
+                    <p>Create your account</p>
+                </div>
+
+                <form asp-action="Signup" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">👤</span>
+                            <input asp-for="Name" class="form-control" placeholder="John Doe" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">@("@")</span>
+                            <input asp-for="Username" class="form-control" placeholder="johndoe" />
+                        </div>
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">✉️</span>
+                            <input asp-for="Email" class="form-control" placeholder="john@example.com" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📱</span>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="+1 234 567 8900" />
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Age"></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📅</span>
+                            <input asp-for="Age" type="number" class="form-control" placeholder="25" />
+                        </div>
+                        <span asp-validation-for="Age" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Create Account</button>
+                </form>
+
+                <div class="login-link">
+                    Already have an account? <a asp-controller="Auth" asp-action="Index">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

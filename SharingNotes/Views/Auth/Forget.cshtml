@@ -1,0 +1,80 @@
+﻿
+@model SharingNotes.Models.ForgotPasswordViewModel
+@{
+    ViewData["Title"] = "Forgot Password";
+}
+
+<div class="content-area">
+    <div class="scrollable-cards">
+        <div class="d-flex align-items-center justify-content-center min-vh-100 p-3">
+            <div class="bg-white rounded-4 shadow-lg p-4 p-md-5" style="max-width: 480px; width: 100%;">
+
+                <!-- Logo Section -->
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold mb-2"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                               -webkit-background-clip: text;
+                               -webkit-text-fill-color: transparent;
+                               background-clip: text;
+                               font-size: 2rem;">
+                        SharingNotes 
+                    </h1>
+                    <p class="text-secondary mb-0">Forgot your password?</p>
+                    <p class="text-muted small">No worries, we'll send you reset instructions.</p>
+                </div>
+
+                <!-- Alert Messages -->
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <!-- Forgot Password Form -->
+                <form asp-action="Forget" asp-controller="Auth" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-4">
+                        <label asp-for="Email" class="form-label fw-semibold text-dark small"></label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <span>✉️</span>
+                            </span>
+                            <input asp-for="Email"
+                                   class="form-control border-start-0 ps-0"
+                                   placeholder="Enter your email address"
+                                   style="border-left: none;" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-lg w-100 text-white fw-semibold rounded-3 mb-3"
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                   border: none;
+                                   padding: 12px;">
+                        Reset Password
+                    </button>
+                </form>
+
+                <!-- Back to Login Link -->
+                <div class="text-center">
+                    <a asp-action="Index" asp-controller="Auth"
+                       class="text-decoration-none d-inline-flex align-items-center gap-2"
+                       style="color: #667eea; font-weight: 600;">
+                        <span>←</span>
+                        <span>Back to Login</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

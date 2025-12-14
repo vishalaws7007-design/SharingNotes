@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Success";
+
+
+    <div class="content-area">
+        <div class="scrollable-cards">
+            <div class="d-flex align-items-center justify-content-center min-vh-100 p-3">
+                <div class="bg-white rounded-4 shadow-lg p-5 text-center" style="max-width: 500px; width: 100%;">
+                    <div class="bg-success rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                         style="width: 80px; height: 80px;">
+                        <span class="text-white fs-1 fw-bold">✓</span>
+                    </div>
+
+                    <h1 class="text-dark fs-2 fw-bold mb-3">Welcome to SharingNotes</h1>
+                    <p class="text-secondary fs-6 mb-4">Your account has been created successfully.</p>
+
+                    <a href="@Url.Action("Index", "Auth")"
+                       class="btn btn-primary btn-lg px-5 fw-semibold rounded-3"
+                       style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                        Go to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

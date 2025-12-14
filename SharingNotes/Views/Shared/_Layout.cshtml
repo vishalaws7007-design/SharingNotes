@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,8 +14,12 @@
     <link rel="stylesheet" href="~/SharingNotes.styles.css" asp-append-version="true" />
 </head>
 <body>
+   
     <div class="page-wrapper">
-    <header>
+       
+        @if(userName !=null)
+        {
+        <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" >
             <div class="container-fluid">
                 <a class="navbar-brand text-white" asp-controller="Home" asp-action="Index">Sharing Notes</a>
@@ -23,7 +31,7 @@
                     <!-- LEFT SIDE : Home -->
                     <ul class="navbar-nav mb-2 mb-lg-0 me-8" style="margin-left:30px">
                         <li class="nav-item">
-                            <a class="nav-link active text-white" aria-current="page" href="#">Home</a>
+                                <a class="nav-link active text-white" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                     </ul>
 
@@ -38,7 +46,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
-                                USERNAME
+                                    @userName
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item text-white" href="#">Manage Profile</a></li>
@@ -55,17 +63,21 @@
             </div>
         </nav>
     </header>
+    }
+       
+
         <div class="container content-area">
             <main role="main" class="pb-3 scrollable-cards">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted bg-dark">
-        <div class="container text-white">
-            &copy; 2025 - SharingNotes  <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
-        </div>
-    </footer>
+        @if (userName!=null) {
+            <footer class="border-top footer text-muted bg-dark">
+                <div class="container text-white">
+                    &copy; 2025 - SharingNotes  <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+                </div>
+            </footer>
+        }
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
