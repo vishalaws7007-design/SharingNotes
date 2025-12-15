@@ -1,4 +1,11 @@
-﻿/* Base Font */
+﻿/* ================= BASE SETTINGS ================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 html {
     font-size: 14px;
     position: relative;
@@ -11,35 +18,13 @@ html {
     }
 }
 
-/* Focus Styles */
-.btn:focus,
-.btn:active:focus,
-.btn-link.nav-link:focus,
-.form-control:focus,
-.form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-/* Floating Label Fix */
-.form-floating > .form-control-plaintext::placeholder,
-.form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
-    text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder,
-.form-floating > .form-control:focus::placeholder {
-    text-align: start;
-}
-
-/* ========== FIXED HEADER + SCROLLABLE BODY LAYOUT ========== */
-
 html, body {
     height: 100%;
     margin: 0;
-    overflow: hidden; /* ✅ Body scroll completely disabled */
-
+    overflow: hidden; /* Disable body scroll */
 }
+
+/* ================= LAYOUT ================= */
 
 .page-wrapper {
     height: 100vh;
@@ -47,62 +32,103 @@ html, body {
     flex-direction: column;
 }
 
-/* Header fixed */
-header {
-    flex-shrink: 0;
-}
-
-/* Footer fixed */
+/* Fixed header & footer */
+header,
 footer {
     flex-shrink: 0;
 }
 
-/* Middle content area */
+/* Middle content */
 .content-area {
     flex: 1;
     overflow: hidden;
 }
 
-/* ✅ ONLY this section will scroll */
+/* ================= SCROLLABLE CONTENT ================= */
+
 .scrollable-cards {
     height: 100%;
     overflow-y: auto;
     padding-bottom: 30px;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
-.signup-container {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 40px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.logo-section {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-    .logo-section h1 {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-size: 32px;
-        font-weight: bold;
-        margin-bottom: 10px;
+    /* Hide scrollbar (all browsers) */
+    .scrollable-cards::-webkit-scrollbar {
+        display: none;
     }
 
-    .logo-section p {
-        color: #666;
-        font-size: 14px;
+.scrollable-cards {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+    /* Remove focus outline */
+    .scrollable-cards:focus,
+    .scrollable-cards:focus-visible {
+        outline: none;
     }
+
+/* ================= NAVBAR FIX ================= */
+
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+    .navbar-nav .nav-link:hover {
+        color: #dbeafe !important;
+    }
+
+    .navbar-nav .nav-link.active {
+        font-weight: 600;
+    }
+
+/* Dropdown */
+.navbar .dropdown-menu {
+    background-color: #0d6efd;
+    border: none;
+}
+
+.navbar .dropdown-item {
+    color: #ffffff !important;
+}
+
+    .navbar .dropdown-item:hover,
+    .navbar .dropdown-item:focus {
+        background-color: #084298;
+        color: #ffffff !important;
+    }
+
+.navbar .dropdown-divider {
+    border-color: rgba(255,255,255,0.3);
+}
+
+.navbar .dropdown-toggle:focus {
+    box-shadow: none;
+}
+
+/* ================= CARD GRID ================= */
+
+/* Cards use Bootstrap grid (row + col-*) */
+
+.post-card {
+    height: 100%;
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .post-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+/* ================= FORMS ================= */
 
 .form-group {
     margin-bottom: 20px;
@@ -114,18 +140,6 @@ label {
     font-weight: 500;
     margin-bottom: 8px;
     font-size: 14px;
-}
-
-.input-wrapper {
-    position: relative;
-}
-
-.input-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
 }
 
 .form-control {
@@ -140,19 +154,14 @@ label {
     .form-control:focus {
         outline: none;
         border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
     }
 
     .form-control.input-validation-error {
         border-color: #dc3545;
     }
 
-.text-danger {
-    color: #dc3545;
-    font-size: 12px;
-    margin-top: 5px;
-    display: block;
-}
+/* ================= BUTTONS ================= */
 
 .btn-submit {
     width: 100%;
@@ -169,11 +178,40 @@ label {
 
     .btn-submit:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 10px 20px rgba(102,126,234,0.3);
     }
 
     .btn-submit:active {
         transform: translateY(0);
+    }
+
+/* ================= AUTH PAGES ================= */
+
+.signup-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.logo-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+    .logo-section h1 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 32px;
+        font-weight: bold;
+    }
+
+    .logo-section p {
+        color: #666;
+        font-size: 14px;
     }
 
 .login-link {
@@ -192,3 +230,24 @@ label {
         .login-link a:hover {
             text-decoration: underline;
         }
+
+/* ================= MISC ================= */
+
+.text-danger {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+.ck-editor__editable {
+    min-height: 280px;
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.card {
+    background-color: #ffffff;
+}

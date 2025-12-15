@@ -1,0 +1,94 @@
+﻿@model Post
+
+@{
+    ViewData["Title"] = "Edit Post";
+}
+
+<div class="container mt-4 mb-5" style="max-width: 900px;">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-3">
+        <small class="text-muted">Dashboard / Manage Posts</small>
+        <h3 class="fw-bold mt-1">✏️ Edit Post</h3>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <!-- FORM -->
+            <form asp-action="Edit" method="post" novalidate>
+                <input asp-for="Id" type="hidden" />
+
+                <!-- TITLE -->
+                <div class="mb-4">
+                    <label asp-for="Title" class="form-label fw-semibold">
+                        Post Title
+                    </label>
+
+                    <input asp-for="Title"
+                           class="form-control"
+                           placeholder="Enter a clear and meaningful title" />
+
+                    <small class="text-muted">
+                        This title will be visible to all users.
+                    </small>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="mb-4">
+                    <label asp-for="Description" class="form-label fw-semibold">
+                        Post Content
+                    </label>
+
+                    <textarea asp-for="Description"
+                              id="editor"
+                              class="form-control"
+                              rows="10"></textarea>
+
+                    <small class="text-muted">
+                        Use formatting to make your content more readable.
+                    </small>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+
+                    <a asp-controller="ManagePost"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        ← Back to Posts
+                    </a>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">
+                            💾 Save Changes
+                        </button>
+
+                        <a asp-controller="ManagePost"
+                           asp-action="Index"
+                           class="btn btn-outline-danger px-4">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- CKEDITOR -->
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'link',
+                'bulletedList', 'numberedList', '|',
+                'blockQuote', 'undo', 'redo'
+            ]
+        })
+        .catch(error => console.error(error));
+</script>

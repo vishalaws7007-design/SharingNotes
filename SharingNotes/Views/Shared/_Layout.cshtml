@@ -2,86 +2,181 @@
 @{
     var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SharingNotes</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SharingNotes.styles.css" asp-append-version="true" />
+    <style>
+        /* ===== NAVBAR COLOR FIX (INLINE) ===== */
+
+        /* Navbar shadow */
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        /* Brand & links color */
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #dbeafe !important;
+            }
+
+            /* Active link */
+            .navbar-nav .nav-link.active {
+                font-weight: 600;
+                color: #ffffff !important;
+            }
+
+        /* Dropdown menu background */
+        .navbar .dropdown-menu {
+            background-color: #0d6efd; /* Bootstrap primary */
+            border: none;
+        }
+
+        /* Dropdown items */
+        .navbar .dropdown-item {
+            color: #ffffff !important;
+        }
+
+            /* Hover / focus dropdown item */
+            .navbar .dropdown-item:hover,
+            .navbar .dropdown-item:focus {
+                background-color: #084298;
+                color: #ffffff !important;
+            }
+
+        /* Divider color */
+        .navbar .dropdown-divider {
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        /* Remove blue outline on dropdown toggle */
+        .navbar .dropdown-toggle:focus {
+            box-shadow: none;
+        }
+    </style>
+
 </head>
+
 <body>
-   
     <div class="page-wrapper">
-       
-        @if(userName !=null)
+
+        @* ================= HEADER ================= *@
+        @if (userName != null)
         {
-        <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary" data-bs-theme="dark" >
-            <div class="container-fluid">
-                <a class="navbar-brand text-white" asp-controller="Home" asp-action="Index">Sharing Notes</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                            Sharing Notes
+                        </a>
 
-                    <!-- LEFT SIDE : Home -->
-                    <ul class="navbar-nav mb-2 mb-lg-0 me-8" style="margin-left:30px">
-                        <li class="nav-item">
-                                <a class="nav-link active text-white" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                    </ul>
+                        <button class="navbar-toggler" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
 
-                    <!-- CENTER : Search -->
-                    <form class="d-flex mx-auto" role="search" style="width: 40%;">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button class="btn btn-outline-success text-white" type="submit">Search</button>
-                    </form>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-                    <!-- RIGHT SIDE : User -->
-                    <ul class="navbar-nav mb-2 mb-lg-0 ms-auto text-white">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" href="#" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                    @userName
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item text-white" href="#">Manage Profile</a></li>
-                                <li><a class="dropdown-item text-white" href="#">Manage Post</a></li>
-                                <li><a class="dropdown-item text-white" href="#">Analytics</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-white" href="#">Logout</a></li>
+                            <!-- LEFT -->
+                            <ul class="navbar-nav me-4">
+                                <li class="nav-item">
+                                    <a class="nav-link active"
+                                       asp-controller="Home"
+                                       asp-action="Index">Home</a>
+                                </li>
                             </ul>
-                        </li>
-                    </ul>
 
-                </div>
+                            <!-- CENTER -->
+                            <form class="d-flex mx-auto" style="width: 40%;">
+                                <input class="form-control me-2" type="search" placeholder="Search" />
+                                <button class="btn btn-outline-light">Search</button>
+                            </form>
 
-            </div>
-        </nav>
-    </header>
-    }
-       
+                            <!-- RIGHT -->
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle"
+                                       href="#"
+                                       role="button"
+                                       data-bs-toggle="dropdown">
+                                        @userName
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="ManagePost"
+                                               asp-action="Index">
+                                                Manage Post
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item">Analytics</a>
+                                        </li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                               asp-controller="Auth"
+                                               asp-action="Logout">
+                                                Logout
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
 
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        }
+
+        @* ================= CONTENT ================= *@
         <div class="container content-area">
-            <main role="main" class="pb-3 scrollable-cards">
-            @RenderBody()
-        </main>
-    </div>
-        @if (userName!=null) {
-            <footer class="border-top footer text-muted bg-dark">
-                <div class="container text-white">
-                    &copy; 2025 - SharingNotes  <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+            <main role="main"
+                  class="pb-3 scrollable-cards"
+                  tabindex="0"
+                  aria-label="Main content">
+                @RenderBody()
+            </main>
+        </div>
+
+        @* ================= FOOTER ================= *@
+        @if (userName != null)
+        {
+            <footer class="border-top footer bg-dark text-white">
+                <div class="container text-center py-2">
+                    &copy; 2025 - SharingNotes
                 </div>
             </footer>
         }
     </div>
+
+    @* ================= SCRIPTS ================= *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Auto-focus scroll area so keyboard scroll works
+        document.addEventListener("DOMContentLoaded", function () {
+            const scrollArea = document.querySelector('.scrollable-cards');
+            if (scrollArea) {
+                scrollArea.focus();
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

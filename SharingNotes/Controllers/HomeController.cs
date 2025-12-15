@@ -1,6 +1,5 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SharingNotes.Models;
+using System.Text.Json;
 
 namespace SharingNotes.Controllers
 {
@@ -11,37 +10,90 @@ namespace SharingNotes.Controllers
             return View();
         }
 
+        // ================= READ MORE (ONLY ONE VIEW PER USER) =================
         [HttpGet]
         public IActionResult ReadMore(int id)
         {
-            Console.WriteLine(id);
+            string viewedKey = $"Post_{id}_Viewed";
+            string viewCountKey = $"Post_{id}_Views";
+
+            // ? Increment view ONLY ONCE per session
+            if (HttpContext.Session.GetString(viewedKey) == null)
+            {
+                int views = HttpContext.Session.GetInt32(viewCountKey) ?? 0;
+                HttpContext.Session.SetInt32(viewCountKey, views + 1);
+                HttpContext.Session.SetString(viewedKey, "true");
+            }
+
+            // ?? Content
             if (id == 1)
             {
                 ViewBag.Title = "HTML";
-                ViewBag.Description = "HTML (HyperText Markup Language) is the foundational language used to structure content on the web. " +
-"It provides the basic building blocks of every webpage, defining elements such as headings, paragraphs, " +
-"images, links, tables, lists, and forms. HTML works by using a system of tags and attributes that tell " +
-"the browser how to interpret and display content. Over time, HTML has evolved to support semantic elements " +
-"like <header>, <footer>, <article>, and <section>, which improve accessibility and SEO by giving meaning " +
-"to different parts of a webpage. Modern HTML5 also introduces powerful features such as audio, video, " +
-"canvas drawing, and form validation without relying on external plugins. Whether you're building a simple " +
-"static page or a complex web application, HTML serves as the backbone that organizes and presents your content.";
+                ViewBag.Description =
+                    "HTML (HyperText Markup Language) is the foundational language used to structure content on the web.";
             }
             else
             {
                 ViewBag.Title = "CSS";
-                ViewBag.Description = "CSS (Cascading Style Sheets) is the styling language used to control the appearance and layout of web pages. " +
-"It allows developers to define colors, fonts, spacing, borders, backgrounds, animations, and responsive designs " +
-"that adapt to different screen sizes. CSS separates presentation from structure, enabling cleaner and more " +
-"maintainable code. With modern CSS features like Flexbox, Grid, transitions, and keyframe animations, developers " +
-"can create visually appealing and highly interactive user interfaces. CSS also supports media queries, which make " +
-"websites responsive across devices such as mobiles, tablets, and desktops. From simple color changes to complex " +
-"layouts and animations, CSS brings creativity and visual polish to the web.";
-
-
+                ViewBag.Description =
+                    "CSS (Cascading Style Sheets) controls the appearance and layout of web pages.";
             }
 
+            // ?? Load counts
+            ViewBag.Views = HttpContext.Session.GetInt32(viewCountKey) ?? 0;
+            ViewBag.Likes = HttpContext.Session.GetInt32($"Post_{id}_Likes") ?? 0;
+
+            // ?? Flags for UI
+            ViewBag.AlreadyLiked =
+                HttpContext.Session.GetString($"Post_{id}_Liked") != null;
+
+            // ?? Load comments
+            ViewBag.CommentsJson =
+                HttpContext.Session.GetString($"Post_{id}_Comments");
+
             return View();
+        }
+
+        // ================= LIKE (ONLY ONE LIKE PER USER) =================
+        [HttpPost]
+        public IActionResult Like(int id)
+        {
+            string likedKey = $"Post_{id}_Liked";
+            string likeCountKey = $"Post_{id}_Likes";
+
+            // ? Allow only one like per session
+            if (HttpContext.Session.GetString(likedKey) == null)
+            {
+                int likes = HttpContext.Session.GetInt32(likeCountKey) ?? 0;
+                HttpContext.Session.SetInt32(likeCountKey, likes + 1);
+                HttpContext.Session.SetString(likedKey, "true");
+            }
+
+            return RedirectToAction(nameof(ReadMore), new { id });
+        }
+
+        // ================= ADD COMMENT =================
+        [HttpPost]
+        public IActionResult AddComment(int id, string commentText)
+        {
+            if (string.IsNullOrWhiteSpace(commentText))
+                return RedirectToAction(nameof(ReadMore), new { id });
+
+            string key = $"Post_{id}_Comments";
+
+            var json = HttpContext.Session.GetString(key);
+            var comments = string.IsNullOrEmpty(json)
+                ? new List<string>()
+                : JsonSerializer.Deserialize<List<string>>(json);
+
+            comments.Add(commentText);
+
+            HttpContext.Session.SetString(
+                key,
+                JsonSerializer.Serialize(comments)
+            );
+
+            return RedirectToAction(nameof(ReadMore), new { id });
         }
     }
 }

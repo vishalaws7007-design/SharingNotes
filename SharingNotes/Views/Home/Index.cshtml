@@ -2,119 +2,82 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="d-flex flex-wrap mt-5 gap-4 justify-content-start ">
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">HTML</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <input type="hidden"  value="1"/>
-            <a asp-controller="Home" asp-action="ReadMore" asp-route-id="1"  class="btn btn-primary">Read More</a>
+<div class="card-grid-container mt-4">
+
+    <div class="row g-4">
+
+        <!-- HTML CARD -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="fw-bold">HTML</h5>
+
+                    <p class="text-muted small flex-grow-1">
+                        Learn the foundation of web development with HTML elements,
+                        tags, and structure.
+                    </p>
+
+                    <div class="small text-muted mb-2">
+                        👁️ @(Context.Session.GetInt32("Post_1_Views") ?? 0)
+                        &nbsp; • &nbsp;
+                        👍 @(Context.Session.GetInt32("Post_1_Likes") ?? 0)
+                    </div>
+
+                    <a asp-controller="Home"
+                       asp-action="ReadMore"
+                       asp-route-id="1"
+                       class="btn btn-primary btn-sm">
+                        Read More
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">CSS</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <input type="hidden" value="2" />
-            <a asp-controller="Home" asp-action="ReadMore" asp-route-id="2" class="btn btn-primary">Go somewhere</a>
+
+        <!-- CSS CARD -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="fw-bold">CSS</h5>
+
+                    <p class="text-muted small flex-grow-1">
+                        Style beautiful and responsive websites using modern CSS.
+                    </p>
+
+                    <div class="small text-muted mb-2">
+                        👁️ @(Context.Session.GetInt32("Post_2_Views") ?? 0)
+                        &nbsp; • &nbsp;
+                        👍 @(Context.Session.GetInt32("Post_2_Likes") ?? 0)
+                    </div>
+
+                    <a asp-controller="Home"
+                       asp-action="ReadMore"
+                       asp-route-id="2"
+                       class="btn btn-primary btn-sm">
+                        Read More
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-     <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-     <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-         <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-         <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
+
+        <!-- TEST CARDS -->
+        @for (int i = 3; i <= 48; i++)
+        {
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-4">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="fw-semibold">Test Post @i</h6>
+
+                        <p class="text-muted small flex-grow-1">
+                            This is a demo card to test vertical scrolling.
+                        </p>
+
+                        <button class="btn btn-secondary btn-sm" disabled>
+                            Coming Soon
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
     </div>
 </div>

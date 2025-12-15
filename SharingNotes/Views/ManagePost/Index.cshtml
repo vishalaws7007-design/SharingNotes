@@ -1,0 +1,69 @@
+﻿@model List<Post>
+
+@{
+    ViewData["Title"] = "Manage Posts";
+}
+
+<!-- HEADER ACTION -->
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h4 class="fw-bold mb-0">📄 Manage Posts</h4>
+
+    <a asp-controller="ManagePost"
+       asp-action="Create"
+       class="btn btn-primary">
+        ➕ Add New Post
+    </a>
+</div>
+
+<!-- POSTS GRID -->
+<div class="row g-4">
+
+    @foreach (var post in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 rounded-4 post-card">
+
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="fw-bold mb-2">
+                        @post.Title
+                    </h5>
+
+                    <p class="text-muted small flex-grow-1"
+                       style="display:-webkit-box;
+                                  -webkit-line-clamp:3;
+                                  -webkit-box-orient:vertical;
+                                  overflow:hidden;">
+                        @post.Description
+                    </p>
+
+                    <div class="d-flex gap-2 mt-3">
+
+                        <a asp-controller="ManagePost"
+                           asp-action="Edit"
+                           asp-route-id="@post.Id"
+                           class="btn btn-outline-success btn-sm flex-fill">
+                            ✏️ Edit
+                        </a>
+
+                        <button class="btn btn-outline-danger btn-sm flex-fill"
+                                onclick="confirmDelete(@post.Id)">
+                            🗑️ Delete
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<!-- DELETE CONFIRM -->
+<script>
+    function confirmDelete(id) {
+        if (confirm("Are you sure you want to delete this post?")) {
+            window.location.href = '/ManagePost/Delete/' + id;
+        }
+    }
+</script>
