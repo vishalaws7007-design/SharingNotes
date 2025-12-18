@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharingNotes.Models;
 using SharingNotes.Service;
@@ -7,20 +8,48 @@ namespace SharingNotes.Controllers
 {
     public class AuthController : Controller
     {
+        private readonly AppDbContext _context;
+
+        public AuthController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Index(Login login)
+        public async Task <IActionResult> Index(Login login)
         {
-            Console.WriteLine("Email :"+login.Email);
-            Console.WriteLine("PassWord :"+login.Password);
 
-            HttpContext.Session.SetString("UserName", login.Email);
-
-
-            return RedirectToAction("Index", "Home");
+            if (ModelState.IsValid)
+            {
+                var data = await _context.signupViewModels.FirstOrDefaultAsync(x=>x.Username.ToLower().Equals(login.Username.ToLower()));
+                if (data != null)
+                {
+                    var hasher = new PasswordHasher<SignupViewModel>();
+                    var result = hasher.VerifyHashedPassword(data, data.Password, login.Password);
+                    if (result == PasswordVerificationResult.Success)
+                    { 
+                        HttpContext.Session.SetString("UserName", login.Username);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid username or password");
+                        return View(login);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username or password");
+                    return View(login);
+                }
+                
+               
+            }
+            return RedirectToAction("Index", "Auth");
           
         }
 
@@ -31,23 +60,23 @@ namespace SharingNotes.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Signup(SignupViewModel model)
+        public async Task <IActionResult> Signup(SignupViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // TODO: Add user to database
-                // Example:
-                // var user = new User
-                // {
-                //     Name = model.Name,
-                //     Username = model.Username,
-                //     Email = model.Email,
-                //     PhoneNumber = model.PhoneNumber,
-                //     Age = model.Age
-                // };
-                // _context.Users.Add(user);
-                // await _context.SaveChangesAsync();
-
+                   var user = new SignupViewModel
+                   {
+                       Name = model.Name,
+                       Username = model.Username,
+                       Email = model.Email,
+                       PhoneNumber = model.PhoneNumber,
+                       Age = model.Age    
+                   };
+                var hasher = new PasswordHasher<SignupViewModel>();
+                user.Password = hasher.HashPassword(user, model.Password);
+                user.ConfirmPassword=hasher.HashPassword(user, model.ConfirmPassword);
+                _context.signupViewModels.Add(user);
+                await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Account created successfully!";
                 return RedirectToAction("SignupSuccess");
             }

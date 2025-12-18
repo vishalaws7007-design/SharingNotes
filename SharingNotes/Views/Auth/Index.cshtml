@@ -12,8 +12,8 @@
 
             <form asp-controller="Auth" asp-action="Index" method="post"> 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Email</label>
-                    <input type="email" class="form-control form-control-lg" placeholder="Enter your email" asp-for="Email">
+                    <label class="form-label fw-semibold">UserName</label>
+                    <input type="text" class="form-control form-control-lg" placeholder="Enter your Username" asp-for="Username">
                 </div>
 
                 <div class="mb-3">
@@ -36,7 +36,45 @@
                     <a asp-controller="Auth" asp-action="SignUP" class="text-decoration-none fw-semibold">Register</a>
                 </p>
             </form>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-sm" style="margin-top: 40px;">
+                        <div class="modal-content" style="border-radius: 12px; border: 2px solid #dc3545;">
+
+                            <div class="modal-header" style="background-color: #dc3545; color: white; border-radius: 10px 10px 0 0;">
+                                <h5 class="modal-title fw-bold">Login Failed</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body" style="background-color: #fff3f3;">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <p class="text-danger fw-semibold">@error.ErrorMessage</p>
+                                }
+                            </div>
+                            <div class="modal-footer" style="background-color: #fff3f3;">
+                                <button class="btn btn-danger w-100 fw-bold"
+                                        onclick="window.location.href='@Url.Action("Index", "Auth")'">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
-    
+    @section Scripts {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var hasErrors = '@(!ViewData.ModelState.IsValid)';
+                if (hasErrors === 'True') {
+                    var modal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    modal.show();
+                }
+            });
+        </script>
+    }
 }
