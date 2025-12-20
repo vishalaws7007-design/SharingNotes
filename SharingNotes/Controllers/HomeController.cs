@@ -1,72 +1,78 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SharingNotes.Models;
 using System.Text.Json;
 
 namespace SharingNotes.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppDbContext _context;
+        public HomeController(AppDbContext appDbContext)
+        {
+            _context = appDbContext;
+        }
         public IActionResult Index()
         {
-            return View();
+            var posts = _context.Posts.ToList();
+            return View(posts);
         }
-
         // ================= READ MORE (ONLY ONE VIEW PER USER) =================
         [HttpGet]
-        public IActionResult ReadMore(int id)
+        public IActionResult ReadMore(string id)
         {
-            string viewedKey = $"Post_{id}_Viewed";
+            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            if (post == null) return NotFound();
             string viewCountKey = $"Post_{id}_Views";
-
-            // ? Increment view ONLY ONCE per session
+            string viewedKey = $"Post_{id}_Viewed";
             if (HttpContext.Session.GetString(viewedKey) == null)
             {
                 int views = HttpContext.Session.GetInt32(viewCountKey) ?? 0;
-                HttpContext.Session.SetInt32(viewCountKey, views + 1);
                 HttpContext.Session.SetString(viewedKey, "true");
+                post.ViewCount += 1;
+                _context.SaveChanges();
             }
-
-            // ?? Content
-            if (id == 1)
+            ViewBag.Id = id;
+            ViewBag.Title = post.Title;
+            ViewBag.Description = post.Description;
+            ViewBag.Views = post.ViewCount;
+            ViewBag.Likes = post.LikeCount;
+            ViewBag.AlreadyLiked = HttpContext.Session.GetString($"Post_{id}_Liked") != null;
+            // Parse comments
+            var commentList = new List<dynamic>();
+            if (!string.IsNullOrEmpty(post.Comments))
             {
-                ViewBag.Title = "HTML";
-                ViewBag.Description =
-                    "HTML (HyperText Markup Language) is the foundational language used to structure content on the web.";
+                var comments = post.Comments.Split("||");
+                foreach (var c in comments)
+                {
+                    var parts = c.Split("~");
+                    if (parts.Length == 3)
+                    {
+                        commentList.Add(new
+                        {
+                            UserName = parts[0],
+                            Text = parts[1],
+                            Date = parts[2]
+                        });
+                    }
+                }
             }
-            else
-            {
-                ViewBag.Title = "CSS";
-                ViewBag.Description =
-                    "CSS (Cascading Style Sheets) controls the appearance and layout of web pages.";
-            }
-
-            // ?? Load counts
-            ViewBag.Views = HttpContext.Session.GetInt32(viewCountKey) ?? 0;
-            ViewBag.Likes = HttpContext.Session.GetInt32($"Post_{id}_Likes") ?? 0;
-
-            // ?? Flags for UI
-            ViewBag.AlreadyLiked =
-                HttpContext.Session.GetString($"Post_{id}_Liked") != null;
-
-            // ?? Load comments
-            ViewBag.CommentsJson =
-                HttpContext.Session.GetString($"Post_{id}_Comments");
-
+            ViewBag.Comments = commentList;
             return View();
         }
-
         // ================= LIKE (ONLY ONE LIKE PER USER) =================
         [HttpPost]
-        public IActionResult Like(int id)
+        public IActionResult Like(string id)
         {
             string likedKey = $"Post_{id}_Liked";
             string likeCountKey = $"Post_{id}_Likes";
-
+            var post = _context.Posts.FirstOrDefault(x => x.Id.Equals(id));
             // ? Allow only one like per session
-            if (HttpContext.Session.GetString(likedKey) == null)
+            if ((HttpContext.Session.GetString(likedKey) == null))
             {
-                int likes = HttpContext.Session.GetInt32(likeCountKey) ?? 0;
-                HttpContext.Session.SetInt32(likeCountKey, likes + 1);
+                post.LikeCount = post.LikeCount + 1;
+                _context.SaveChanges();
                 HttpContext.Session.SetString(likedKey, "true");
+
             }
 
             return RedirectToAction(nameof(ReadMore), new { id });
@@ -74,26 +80,27 @@ namespace SharingNotes.Controllers
 
         // ================= ADD COMMENT =================
         [HttpPost]
-        public IActionResult AddComment(int id, string commentText)
+        public IActionResult AddComment(string id, string commentText)
         {
             if (string.IsNullOrWhiteSpace(commentText))
                 return RedirectToAction(nameof(ReadMore), new { id });
+            var post = _context.Posts.FirstOrDefault(x => x.Id == id);
+            if (post != null)
+            {
+                string userName = HttpContext.Session.GetString("UserName") ?? "Guest";
+                string dateTime = DateTime.Now.ToString("dd MMM yyyy hh:mm tt");
 
-            string key = $"Post_{id}_Comments";
+                string newComment = $"{userName}~{commentText}~{dateTime}";
 
-            var json = HttpContext.Session.GetString(key);
-            var comments = string.IsNullOrEmpty(json)
-                ? new List<string>()
-                : JsonSerializer.Deserialize<List<string>>(json);
+                if (string.IsNullOrEmpty(post.Comments))
+                    post.Comments = newComment;
+                else
+                    post.Comments += "||" + newComment;
 
-            comments.Add(commentText);
-
-            HttpContext.Session.SetString(
-                key,
-                JsonSerializer.Serialize(comments)
-            );
-
+                _context.SaveChanges();
+            }
             return RedirectToAction(nameof(ReadMore), new { id });
         }
+
     }
 }

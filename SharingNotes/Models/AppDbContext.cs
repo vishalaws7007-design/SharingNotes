@@ -10,6 +10,7 @@ namespace SharingNotes.Models
 
         }
 
-        public DbSet<SignupViewModel> signupViewModels {  get; set; }
+        public DbSet<SignupViewModel> signupViewModels { get; set; }
+        public DbSet<Post> Posts {  get; set; }
     }
 }

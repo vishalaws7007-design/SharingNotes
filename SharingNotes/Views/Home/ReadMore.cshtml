@@ -1,92 +1,71 @@
-﻿@{
-    ViewData["Title"] = ViewBag.Title;
-}
-
+﻿
 <div class="container mt-5" style="max-width: 800px;">
     <h1 class="mb-2">@ViewBag.Title</h1>
 
-    <!-- 🔹 Views & Likes -->
+    <!-- Views & Likes -->
     <p class="text-muted mb-3">
         👁️ Views: <strong>@ViewBag.Views</strong>
-        &nbsp; | &nbsp;
-        👍 Likes: <strong>@ViewBag.Likes</strong>
+        | 👍 Likes: <strong>@ViewBag.Likes</strong>
     </p>
 
+    <!-- ✅ Render HTML description -->
     <p style="font-size: 18px; line-height: 1.8;">
-        @ViewBag.Description
+        @Html.Raw(ViewBag.Description)
     </p>
 
     <hr />
 
-    <!-- 🔹 LIKE BUTTON (ONLY ONCE PER USER) -->
+    <!-- Like Button -->
     @if (ViewBag.AlreadyLiked == true)
     {
-        <button class="btn btn-secondary" disabled>
-            👍 Liked
-        </button>
+        <button class="btn btn-secondary" disabled> 👍 Liked </button>
     }
     else
     {
         <form asp-controller="Home"
               asp-action="Like"
-              asp-route-id="@Context.Request.RouteValues["id"]"
+              asp-route-id="@ViewBag.id"
               method="post"
               class="d-inline">
-            <button class="btn btn-outline-primary">
-                👍 Like
-            </button>
+            <button class="btn btn-outline-primary"> 👍 Like </button>
         </form>
     }
 
-    <!-- 🔹 ADD COMMENT -->
+    <!-- Add Comment -->
     <form asp-controller="Home"
           asp-action="AddComment"
           asp-route-id="@Context.Request.RouteValues["id"]"
           method="post"
           class="mt-4">
-
         <textarea name="commentText"
                   class="form-control"
                   rows="2"
                   placeholder="Write a comment..."
                   required></textarea>
-
-        <button class="btn btn-primary mt-2">
-            💬 Comment
-        </button>
+        <button class="btn btn-primary mt-2"> 💬 Comment </button>
     </form>
-
-    <!-- 🔹 SHOW COMMENTS -->
+    <!-- Show Comments -->
     <div class="mt-4">
         <h5>Comments</h5>
-
-        @if (ViewBag.CommentsJson != null)
+        @if (ViewBag.Comments != null && ViewBag.Comments.Count > 0)
         {
-            var comments = System.Text.Json.JsonSerializer
-            .Deserialize<List<string>>(ViewBag.CommentsJson);
-
-            if (comments.Count > 0)
-            {
-                <ul class="list-group">
-                    @foreach (var comment in comments)
-                    {
-                        <li class="list-group-item">
-                            @comment
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p class="text-muted">No comments yet.</p>
-            }
+            <ul class="list-group">
+                @foreach (var comment in ViewBag.Comments)
+                {
+                    <li class="list-group-item">
+                        <strong>@comment.UserName</strong>
+                        <small class="text-muted"> • @comment.Date</small>
+                        <br />
+                        @comment.Text
+                    </li>
+                }
+            </ul>
         }
         else
         {
             <p class="text-muted">No comments yet.</p>
         }
     </div>
-
     <hr />
 
     <a asp-controller="Home"

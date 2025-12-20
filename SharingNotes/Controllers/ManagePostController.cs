@@ -6,25 +6,16 @@ namespace SharingNotes.Controllers
 {
     public class ManagePostController : Controller
     {
+        private readonly AppDbContext _context;
+        public ManagePostController( AppDbContext context)
+        {
+            _context = context;
+        }
         // ================= INDEX =================
         public IActionResult Index()
         {
-            var posts = new List<Post>
-            {
-                new Post
-                {
-                    Id = 1,
-                    Title = "HTML",
-                    Description = "With supporting text below as a natural lead-in to additional content."
-                },
-                new Post
-                {
-                    Id = 2,
-                    Title = "CSS",
-                    Description = "CSS is used to style and layout web pages."
-                }
-            };
 
+            var posts = _context.Posts.Where(x => x.userName.ToLower().Equals(HttpContext.Session.GetString("UserName").ToLower())).ToList();            
             // Load likes & comments from session
             foreach (var post in posts)
             {
@@ -47,101 +38,74 @@ namespace SharingNotes.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Post model)
+        public async Task<IActionResult> Create(Post model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            if (ModelState.IsValid)
+            {
+                var post = new Post
+                {
+                    
+                    Title = model.Title,
+                    Description = model.Description,
+                    Comments = model.Comments,
+                    LikeCount = model.LikeCount,
+                    userName = HttpContext.Session.GetString("UserName"),
+                    ViewCount = model.ViewCount
+                };
+                await _context.Posts.AddAsync(post);
+                await _context.SaveChangesAsync();
+                
 
-            TempData["Title"] = model.Title;
-            TempData["Description"] = model.Description;
+
+                return RedirectToAction(nameof(Index));
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
         // ================= EDIT =================
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
-            Post post;
-
-            if (id == 1)
-            {
-                post = new Post
-                {
-                    Id = 1,
-                    Title = "HTML",
-                    Description = "HTML is the backbone of the web."
-                };
-            }
-            else
-            {
-                post = new Post
-                {
-                    Id = id,
-                    Title = "CSS",
-                    Description = "CSS styles the web."
-                };
-            }
-
-            return View(post);
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+            var post = _context.Posts.FirstOrDefault(x => x.Id == id);
+            if (post == null)
+                return NotFound();
+            return View(post); // ✅ single Post
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(Post model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            TempData["Title"] = model.Title;
-            TempData["Description"] = model.Description;
+            var post = _context.Posts.FirstOrDefault(x => x.Id == model.Id);
+            if (post == null)
+                return NotFound();
+
+            post.Title = model.Title;
+            post.Description = model.Description;
+            post.Modifedon= DateTime.Now.ToString("dd-MMM-yyyy:hh:mm");
+
+            _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
+
 
         // ================= DELETE =================
         [HttpGet]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
-            // TEMP delete (no DB)
-            HttpContext.Session.Remove($"Post_{id}_Likes");
-            HttpContext.Session.Remove($"Post_{id}_Comments");
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        // ================= LIKE =================
-        [HttpPost]
-        public IActionResult Like(int id)
-        {
-            string key = $"Post_{id}_Likes";
-            int likes = HttpContext.Session.GetInt32(key) ?? 0;
-
-            HttpContext.Session.SetInt32(key, likes + 1);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        // ================= COMMENT =================
-        [HttpPost]
-        public IActionResult AddComment(int postId, string commentText)
-        {
-            if (string.IsNullOrWhiteSpace(commentText))
-                return RedirectToAction(nameof(Index));
-
-            string key = $"Post_{postId}_Comments";
-
-            var json = HttpContext.Session.GetString(key);
-            var comments = string.IsNullOrEmpty(json)
-                ? new List<string>()
-                : JsonSerializer.Deserialize<List<string>>(json);
-
-            comments.Add(commentText);
-
-            HttpContext.Session.SetString(
-                key,
-                JsonSerializer.Serialize(comments)
-            );
-
+            var data=_context.Posts.FirstOrDefault(x => x.Id.Equals(id));
+            if(data != null)
+            {
+                _context.Posts.Remove(data);
+                _context.SaveChanges();
+            }
             return RedirectToAction(nameof(Index));
         }
     }
