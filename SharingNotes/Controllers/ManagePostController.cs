@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SharingNotes.Models;
 using System.Text.Json;
 
@@ -12,6 +13,7 @@ namespace SharingNotes.Controllers
             _context = context;
         }
         // ================= INDEX =================
+        [Authorize]
         public IActionResult Index()
         {
 
@@ -29,13 +31,14 @@ namespace SharingNotes.Controllers
             return View(posts);
         }
 
+        [Authorize]
         // ================= CREATE =================
         [HttpGet]
         public IActionResult Create()
         {
             return View(new Post());
         }
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Post model)
@@ -64,6 +67,7 @@ namespace SharingNotes.Controllers
         }
 
         // ================= EDIT =================
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -74,7 +78,7 @@ namespace SharingNotes.Controllers
                 return NotFound();
             return View(post); // ✅ single Post
         }
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Post model)
@@ -95,7 +99,7 @@ namespace SharingNotes.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        [Authorize]
         // ================= DELETE =================
         [HttpGet]
         public IActionResult Delete(string id)

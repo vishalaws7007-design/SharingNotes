@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharingNotes.Models;
 
@@ -11,6 +12,7 @@ namespace SharingNotes.Controllers
         {
             db = appDbContext;
         }
+        [Authorize]
         public IActionResult Index()
         {
             string userName = HttpContext.Session.GetString("UserName");

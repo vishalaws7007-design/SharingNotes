@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SharingNotes.Models;
 using System.Text.Json;
 
@@ -60,6 +61,7 @@ namespace SharingNotes.Controllers
             return View();
         }
         // ================= LIKE (ONLY ONE LIKE PER USER) =================
+        [Authorize]
         [HttpPost]
         public IActionResult Like(string id)
         {
@@ -79,6 +81,7 @@ namespace SharingNotes.Controllers
         }
 
         // ================= ADD COMMENT =================
+        [Authorize]
         [HttpPost]
         public IActionResult AddComment(string id, string commentText)
         {

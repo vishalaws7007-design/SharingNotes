@@ -1,10 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
-@{
-    var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -77,8 +71,6 @@
     <div class="page-wrapper">
 
         @* ================= HEADER ================= *@
-        @if (userName != null)
-        {
             <header>
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                     <div class="container-fluid">
@@ -109,13 +101,16 @@
                                 <button class="btn btn-outline-light" type="submit">Search</button>
                             </form>
                             <!-- RIGHT -->
+                        
                             <ul class="navbar-nav ms-auto">
+                            @if (User.Identity != null && User.Identity.IsAuthenticated)
+                            {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle"
                                        href="#"
                                        role="button"
                                        data-bs-toggle="dropdown">
-                                        @userName
+                                        @User.Identity.Name
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
@@ -138,18 +133,29 @@
                                         </li>
                                     </ul>
                                 </li>
+                                }
+                                else
+                                {
+                                      <li class="nav-item">
+            <a class="btn btn-outline-light"
+               asp-controller="Auth"
+               asp-action="Index">
+                Login
+            </a>
+        </li>
+                                }
                             </ul>
-
-                        </div>
+                         
+                    </div>
                     </div>
                 </nav>
             </header>
-        }
+        
 
         @* ================= CONTENT ================= *@
         <div class="container content-area">
             <main role="main"
-                  class="pb-3 scrollable-cards"
+                  class="pb-lg-5 scrollable-cards mb-6"
                   tabindex="0"
                   aria-label="Main content">
                 @RenderBody()
@@ -157,14 +163,11 @@
         </div>
 
         @* ================= FOOTER ================= *@
-        @if (userName != null)
-        {
             <footer class="border-top footer bg-dark text-white">
-                <div class="container text-center py-2">
+                <div class="container text-center pb-4">
                     &copy; 2025 - SharingNotes
                 </div>
             </footer>
-        }
     </div>
 
     @* ================= SCRIPTS ================= *@
