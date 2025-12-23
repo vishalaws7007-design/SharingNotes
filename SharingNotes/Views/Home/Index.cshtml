@@ -14,19 +14,15 @@
                         // Extract first paragraph
                         var match = Regex.Match(data.Description ?? "", "<p>(.*?)</p>", RegexOptions.Singleline);
                         var firstPara = match.Success ? match.Groups[1].Value : data.Description ?? "";
-
                         // Remove HTML tags
                         var plain = Regex.Replace(firstPara, "<.*?>", "");
-
                         // Remove &nbsp; and other extra spaces
                         plain = plain.Replace("&nbsp;", " ").Trim();
-
                         // Trim safely
                         var shortText = plain.Length > 120 ? plain.Substring(0, 120) + "..." : plain;
                     }
                     @shortText
                 </p>
-
                 <!-- Author -->
                 <p class="text-muted small mb-1">
                     <strong>Author:</strong> @data.userName
@@ -35,14 +31,12 @@
                 <div class="small text-muted mb-2">
                     👁️ @data.ViewCount • 👍 @data.LikeCount
                 </div>
-
                 <a asp-controller="Home"
                    asp-action="ReadMore"
                    asp-route-id="@data.Id"
-                   class="btn btn-primary btn-sm">
+                   class="btn btn-secondary btn-sm">
                     Read More
                 </a>
-
             </div>
         </div>
     }

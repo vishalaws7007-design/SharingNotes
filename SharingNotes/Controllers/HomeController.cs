@@ -101,6 +101,17 @@ namespace SharingNotes.Controllers
             }
             return RedirectToAction(nameof(ReadMore), new { id });
         }
+        [HttpGet]
+        public IActionResult Search(string title)
+        {
+            var results = _context.Posts
+                .Where(p => p.Title.Contains(title) || p.Description.Contains(title))
+                .ToList();
+
+            return View(results);
+        }
+
+
 
     }
 }

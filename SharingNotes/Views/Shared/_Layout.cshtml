@@ -1,4 +1,5 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @{
     var userName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
 }
@@ -13,57 +14,62 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SharingNotes.styles.css" asp-append-version="true" />
     <style>
-        /* ===== NAVBAR COLOR FIX (INLINE) ===== */
+        :root {
+            --brand-bg: #0f172a;
+            --brand-bg-light: #1e293b;
+            --brand-text: #ffffff;
+            --brand-hover: #c7d2fe;
+        }
 
-        /* Navbar shadow */
+        /* NAVBAR */
         .navbar {
+            background-color: var(--brand-bg) !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
 
-        /* Brand & links color */
         .navbar-brand,
         .navbar-nav .nav-link {
-            color: #ffffff !important;
+            color: var(--brand-text) !important;
         }
 
             .navbar-nav .nav-link:hover {
-                color: #dbeafe !important;
+                color: var(--brand-hover) !important;
             }
 
-            /* Active link */
             .navbar-nav .nav-link.active {
                 font-weight: 600;
-                color: #ffffff !important;
+                color: var(--brand-text) !important;
             }
 
-        /* Dropdown menu background */
+        /* DROPDOWN */
         .navbar .dropdown-menu {
-            background-color: #ffff; /* Bootstrap primary */
+            background-color: var(--brand-bg-light);
             border: none;
         }
 
-        /* Dropdown items */
         .navbar .dropdown-item {
-            color: #ffffff !important;
+            color: var(--brand-text) !important;
         }
-
-            /* Hover / focus dropdown item */
-            .navbar .dropdown-item:hover,
-            .navbar .dropdown-item:focus {
-                background-color: #084298;
-                color: #ffffff !important;
+            .navbar .dropdown-item:hover {
+                background-color: var(--brand-bg);
+                color: var(--brand-hover) !important;
             }
 
-        /* Divider color */
         .navbar .dropdown-divider {
-            border-color: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.2);
+        }
+        /* FOOTER */
+        footer.footer {
+            background-color: var(--brand-bg) !important;
+            color: var(--brand-text);
         }
 
-        /* Remove blue outline on dropdown toggle */
+        /* Remove focus outline */
         .navbar .dropdown-toggle:focus {
             box-shadow: none;
         }
     </style>
+
 
 </head>
 
@@ -98,11 +104,10 @@
                             </ul>
 
                             <!-- CENTER -->
-                            <form class="d-flex mx-auto" style="width: 40%;">
-                                <input class="form-control me-2" type="search" placeholder="Search" />
-                                <button class="btn btn-outline-light">Search</button>
+                            <form class="d-flex mx-auto" style="width: 40%;" asp-controller="Home" asp-action="Search" method="get">
+                                <input class="form-control me-2" type="search" name="title" placeholder="Search by title" />
+                                <button class="btn btn-outline-light" type="submit">Search</button>
                             </form>
-
                             <!-- RIGHT -->
                             <ul class="navbar-nav ms-auto">
                                 <li class="nav-item dropdown">
@@ -121,7 +126,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item">Analytics</a>
+                                            <a class="dropdown-item" asp-controller="Analytics" asp-action="Index">Analytics</a>
                                         </li>
                                         <li><hr class="dropdown-divider" /></li>
                                         <li>

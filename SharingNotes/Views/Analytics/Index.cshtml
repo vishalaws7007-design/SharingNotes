@@ -1,0 +1,87 @@
+﻿@model List<Post>
+@{
+
+}
+<div class="row g-3 mb-4 mt-4" >
+    <div class="mb-4">
+        <small class="text-muted">Dashboard / Analytics</small>
+        <h2 class="fw-bold mt-1">📊 Post Analytics Overview</h2>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h6>Total Posts</h6>
+                <h3 class="fw-bold">@ViewBag.TotalPosts</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h6>Total Views</h6>
+                <h3 class="fw-bold">@ViewBag.TotalViews</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h6>Total Likes</h6>
+                <h3 class="fw-bold">@ViewBag.TotalLikes</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h6>Total Comments</h6>
+                <h3 class="fw-bold">@ViewBag.TotalComments</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5 class="mb-3 fw-bold">📊 Post Analytics</h5>
+
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Views</th>
+                    <th>Likes</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var post in Model)
+                {
+                    <tr>
+                        <td>@post.Title</td>
+                        <td>@post.ViewCount</td>
+                        <td>@post.LikeCount</td>
+                        <td>
+                            @(string.IsNullOrEmpty(post.Comments)
+                                                    ? 0
+                                                    : post.Comments.Split("||").Length)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <p class="text-muted text-center mt-3">
+                No posts found.
+            </p>
+        }
+
+    </div>
+</div>
